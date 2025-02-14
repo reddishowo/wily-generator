@@ -1,9 +1,9 @@
 "use client";
 import { motion, AnimatePresence } from "framer-motion";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import YouTubeAudio from "@/components/YoutubeAudio";
-import router from "next/router";
+import Link from "next/link";
 
 export default function Valentine() {
   const [showConfetti, setShowConfetti] = useState(false);
@@ -18,17 +18,14 @@ export default function Valentine() {
     setTimeout(() => setShowConfetti(false), 3000);
     setTimeout(() => setShowHearts(false), 4000);
   };
-  
-  const navigateToValentinePage = () => {
-    router.push("/");
-  };
 
   return (
     <main className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-red-100 to-pink-200 p-6 overflow-hidden">
       <YouTubeAudio />
-      {/* Floating hearts background */}
+      
+      {/* Floating hearts background - now conditionally rendered based on showHearts */}
       <div className="fixed inset-0 pointer-events-none">
-        {Array.from({ length: 20 }).map((_, index) => (
+        {(showHearts || true) && Array.from({ length: 20 }).map((_, index) => (
           <motion.div
             key={`float-heart-${index}`}
             className="absolute text-3xl"
@@ -107,13 +104,24 @@ export default function Valentine() {
         Terima Kasih karena Selalu Ada Buat Aku Sayang! ❤️
       </motion.p>
       
+      {/* Display selected message when available */}
+      {selectedMessage && (
+        <motion.div
+          className="mt-4 text-xl font-bold text-red-600 text-center"
+          initial={{ opacity: 0, scale: 0 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ type: "spring", duration: 0.8 }}
+        >
+          {selectedMessage}
+        </motion.div>
+      )}
+      
       <motion.div
         className="mt-8 flex flex-col sm:flex-row gap-4 z-10"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1, delay: 1.5 }}
       >
-
         <motion.button
           className="px-6 py-3 bg-red-500 text-white rounded-lg shadow-lg hover:bg-red-600 transition-all relative overflow-hidden group"
           whileHover={{ scale: 1.05 }}
@@ -128,6 +136,23 @@ export default function Valentine() {
             transition={{ duration: 0.4 }}
           />
         </motion.button>
+        
+        {/* Use Link component instead of programmatic navigation */}
+        <Link href="/" passHref>
+          <motion.button
+            className="px-6 py-3 bg-pink-400 text-white rounded-lg shadow-lg hover:bg-pink-500 transition-all relative overflow-hidden group"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <span className="relative z-10">Go Home 🏠</span>
+            <motion.div 
+              className="absolute inset-0 bg-gradient-to-r from-pink-300 to-pink-500"
+              initial={{ x: "-100%" }}
+              whileHover={{ x: 0 }}
+              transition={{ duration: 0.4 }}
+            />
+          </motion.button>
+        </Link>
       </motion.div>
       
       {/* Confetti effect - Improved animation */}

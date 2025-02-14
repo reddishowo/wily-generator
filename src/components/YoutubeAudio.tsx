@@ -1,30 +1,31 @@
 "use client";
-
-import { useEffect, useRef } from "react";
-import YouTube from "react-youtube";
+import { useRef } from "react"; 
+import YouTube, { YouTubeEvent, YouTubePlayer } from "react-youtube"; 
 
 export default function YouTubeAudio() {
-  const playerRef = useRef<any>(null);
+  const playerRef = useRef<YouTubePlayer | null>(null);
 
-  const onReady = (event: any) => {
+  const onReady = (event: YouTubeEvent) => {
     playerRef.current = event.target;
     playerRef.current.playVideo();
   };
 
   const onEnd = () => {
-    playerRef.current.playVideo(); // Loop saat lagu selesai
+    if (playerRef.current) {
+      playerRef.current.playVideo();
+    }
   };
 
   const opts = {
     height: "0",
     width: "0",
     playerVars: {
-      autoplay: 1, // Auto-play saat dimuat
-      controls: 0, // Sembunyikan kontrol
+      autoplay: 1, // Auto-play when loaded
+      controls: 0, // Hide controls
       showinfo: 0,
       modestbranding: 1,
-      loop: 1, // Loop otomatis
-      playlist: "zEFMeRD1ihA", // Gunakan ID video yang sama untuk loop
+      loop: 1, // Auto loop
+      playlist: "zEFMeRD1ihA", 
     },
   };
 
